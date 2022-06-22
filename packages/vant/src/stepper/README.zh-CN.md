@@ -137,6 +137,93 @@ export default {
 <van-stepper v-model="value" theme="round" button-size="22" disable-input />
 ```
 
+### 自定义按钮样式
+
+自定义按钮样式，通过 `plus`、`minus` 方法进行增减。
+
+```html
+<van-config-provider :theme-vars="themeVars">
+  <div class="custom-button-demo">
+    <button class="left-button" @click="minus">-</button>
+    <div class="stepper-wrapper">
+      <van-stepper
+        ref="customButtonStepper"
+        v-model="stepperCustomButton"
+        :show-plus="false"
+        :show-minus="false"
+        disable-input
+      />
+    </div>
+    <button class="right-button" @click="plus">+</button>
+  </div>
+</van-config-provider>
+```
+
+```js
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    const stepperCustomButton = ref(1);
+    const customButtonStepper = ref(null);
+
+    const plus = () => {
+      customButtonStepper.value.plus();
+    };
+
+    const minus = () => {
+      customButtonStepper.value.minus();
+    };
+
+    const themeVars = {
+      stepperBackgroundColor: '#fff',
+      stepperInputTextColor: '#fcc09c',
+      stepperInputHeight: '25px',
+    };
+
+    return {
+      plus,
+      minus,
+      stepperCustomButton,
+      themeVars,
+    };
+  },
+};
+```
+
+```less
+.custom-button-demo {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .stepper-wrapper {
+    border-top: 1px solid #fcc09c;
+    border-bottom: 1px solid #fcc09c;
+  }
+
+  button {
+    height: 28px;
+    width: 28px;
+    border: 0;
+    background: linear-gradient(0deg, #ff7c3b 0%, #ffc446 100%);
+    box-shadow: 0 0 10px 1px rgba(254, 255, 254, 0.59) inset;
+    font-size: 14px;
+    color: #ffffff;
+    cursor: pointer;
+
+    &.left-button {
+      border-top-left-radius: 35px;
+      border-bottom-left-radius: 35px;
+    }
+    &.right-button {
+      border-top-right-radius: 35px;
+      border-bottom-right-radius: 35px;
+    }
+  }
+}
+```
+
 ## API
 
 ### Props
@@ -176,6 +263,15 @@ export default {
 | minus | 点击减少按钮时触发 | - |
 | focus | 输入框聚焦时触发 | _event: Event_ |
 | blur | 输入框失焦时触发 | _event: Event_ |
+
+### 方法
+
+通过 ref 可以获取到 Stepper 实例并调用实例方法，详见[组件实例方法](#/zh-CN/advanced-usage#zu-jian-shi-li-fang-fa)。
+
+| 方法名 | 说明     | 参数 | 返回值 |
+| ------ | -------- | ---- | ------ |
+| plus   | 触发增加 | -    | -      |
+| minus  | 触发减少 | -    | -      |
 
 ### 类型定义
 

@@ -6,6 +6,7 @@ import {
   defineComponent,
   type PropType,
   type ExtractPropTypes,
+  ComponentPublicInstance,
 } from 'vue';
 
 // Utils
@@ -29,6 +30,7 @@ import {
 
 // Composables
 import { useCustomFieldValue } from '@vant/use';
+import { useExpose } from '../composables/use-expose';
 
 const [name, bem] = createNamespace('stepper');
 
@@ -65,7 +67,17 @@ const stepperProps = {
   decimalLength: numericProp,
 };
 
+type StepperExpose = {
+  plus: () => void;
+  minus: () => void;
+};
+
 export type StepperProps = ExtractPropTypes<typeof stepperProps>;
+
+export type StepperInstance = ComponentPublicInstance<
+  StepperProps,
+  StepperExpose
+>;
 
 export default defineComponent({
   name,
@@ -287,6 +299,21 @@ export default defineComponent({
     });
 
     useCustomFieldValue(() => props.modelValue);
+
+    const plus = () => {
+      actionType = 'plus';
+      onChange();
+    };
+
+    const minus = () => {
+      actionType = 'minus';
+      onChange();
+    };
+
+    useExpose<StepperExpose>({
+      plus,
+      minus,
+    });
 
     return () => (
       <div role="group" class={bem([props.theme])}>

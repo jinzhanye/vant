@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import VanCell from '../../cell';
+import VanConfigProvider from '../../config-provider';
 import VanStepper from '..';
 import { ref } from 'vue';
 import { useTranslate } from '../../../docs/site';
 import { Toast } from '../../toast';
+import { StepperInstance } from '../../stepper';
 
 const t = useTranslate({
   'zh-CN': {
@@ -15,6 +17,7 @@ const t = useTranslate({
     beforeChange: '异步变更',
     disableInput: '禁用输入框',
     decimalLength: '固定小数位数',
+    customButton: '自定义按钮样式',
   },
   'en-US': {
     step: 'Step',
@@ -38,6 +41,22 @@ const stepper7 = ref(1);
 const stepper8 = ref(1);
 const stepperRound = ref(1);
 const disabledInput = ref(1);
+const stepperCustomButton = ref(1);
+const themeVars = {
+  stepperBackgroundColor: '#fff',
+  stepperInputTextColor: '#fcc09c',
+  stepperInputHeight: '25px',
+};
+
+const customButtonStepper = ref<StepperInstance>();
+
+const plus = () => {
+  customButtonStepper.value?.plus();
+};
+
+const minus = () => {
+  customButtonStepper.value?.minus();
+};
 
 const beforeChange = () => {
   Toast.loading({ forbidClick: true });
@@ -117,5 +136,60 @@ const beforeChange = () => {
         />
       </template>
     </van-cell>
+
+    <van-cell center :title="t('customButton')">
+      <template #value>
+        <van-config-provider :theme-vars="themeVars">
+          <div class="custom-button-demo">
+            <button class="left-button" @click="minus">-</button>
+            <div class="stepper-wrapper">
+              <van-stepper
+                ref="customButtonStepper"
+                v-model="stepperCustomButton"
+                :show-plus="false"
+                :show-minus="false"
+                disable-input
+              />
+            </div>
+            <button class="right-button" @click="plus">+</button>
+          </div>
+        </van-config-provider>
+      </template>
+    </van-cell>
   </demo-block>
 </template>
+
+<style lang="less">
+.demo-stepper {
+  .custom-button-demo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .stepper-wrapper {
+      border-top: 1px solid #fcc09c;
+      border-bottom: 1px solid #fcc09c;
+    }
+
+    button {
+      height: 28px;
+      width: 28px;
+      border: 0;
+      background: linear-gradient(0deg, #ff7c3b 0%, #ffc446 100%);
+      box-shadow: 0 0 10px 1px rgba(254, 255, 254, 0.59) inset;
+      font-size: 14px;
+      color: #fff;
+      cursor: pointer;
+
+      &.left-button {
+        border-top-left-radius: 35px;
+        border-bottom-left-radius: 35px;
+      }
+      &.right-button {
+        border-top-right-radius: 35px;
+        border-bottom-right-radius: 35px;
+      }
+    }
+  }
+}
+</style>
