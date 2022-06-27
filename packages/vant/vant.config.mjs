@@ -116,6 +116,10 @@ export default {
                 title: 'Image 图片',
               },
               {
+                path: 'background-image',
+                title: 'BackgroundImage 背景图片',
+              },
+              {
                 path: 'col',
                 title: 'Layout 布局',
               },
